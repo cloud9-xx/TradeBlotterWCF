@@ -1,0 +1,132 @@
+﻿<Window x:Class="Blotter.Views.ShellView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+             xmlns:convert="clr-namespace:Blotter.Converters"
+             mc:Ignorable="d" 
+             Icon="pack://application:,,,/Assets/bill.png"
+             d:DesignHeight="500" d:DesignWidth="1000">
+    <Window.Resources>
+        <!-- Shared Styles -->
+        <Style TargetType="{x:Type TextBlock}" x:Key="RightCell">
+            <Setter Property="TextAlignment" Value="Right"/>
+        </Style>
+        <Style TargetType="{x:Type TextBlock}" x:Key="StatusCell">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding State}" Value="New">
+                    <Setter Property="Background" Value="#ffff99"></Setter>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding State}" Value="Cancelled">
+                    <Setter Property="Background" Value="#ff9999"></Setter>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding State}" Value="Error">
+                    <Setter Property="Background" Value="#ff9999"></Setter>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding State}" Value="Matched">
+                    <Setter Property="Background" Value="#8cd98c"></Setter>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding State}" Value="Amended">
+                    <Setter Property="Background" Value="#8cd98c"></Setter>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        
+        <!-- These are here, because the Combo Boxes in the DataGrid do not have access to the top DataContext as they sit outside of the live tree. So they exist here so we can bind to them -->
+        <CollectionViewSource Source="{Binding Securities}" x:Key="Securities">
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="Isin" Direction="Ascending" />
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+        <CollectionViewSource Source="{Binding Counterparties}" x:Key="Counterparties">
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="Name" Direction="Ascending" />
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+        <CollectionViewSource Source="{Binding BuyOrSellEnum}" x:Key="BuyOrSellEnum" />
+        
+        <!-- Useful Helpers-->
+        <convert:BoolToRowDetailsVisibility x:Key="BoolToVis" />
+    </Window.Resources>
+    
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        
+        <!-- Top Row - Useful Actions-->
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <Button Content="Add Trade" x:Name="AddTrade" />
+            <ToggleButton Content="Show History" IsChecked="{Binding ShowChildren}" />
+            <ToggleButton Content="Filter Cancelled Trades" IsChecked="{Binding FilterCancelled}" />
+        </StackPanel>
+        
+        <DataGrid 
+            Grid.Row="1" 
+            RowDetailsVisibilityMode="{Binding ShowChildren, Converter={StaticResource BoolToVis}}" 
+            RowEditEnding="DataGrid_RowEditEnding" 
+            ItemsSource="{Binding Trades}" 
+            AutoGenerateColumns="False" 
+            FontFamily="Consolas" 
+            CanUserAddRows="False"
+            VirtualizingStackPanel.VirtualizationMode="Standard" >
+            <DataGrid.RowStyle>
+                <Style TargetType="{x:Type DataGridRow}">
+                    <Style.Triggers>
+                        <EventTrigger RoutedEvent="Loaded">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <ColorAnimation 
+                                            Storyboard.TargetProperty="(DataGridRow.Background).(SolidColorBrush.Color)" 
+                                            Duration="00:00:03" 
+                                            From="Red" To="White" />
+                                </Storyboard>
+                            </BeginStoryboard>
+
+                        </EventTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.RowStyle>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Trade Ref" Binding="{Binding Trade.Id}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Status" Binding="{Binding State}" IsReadOnly="True" ElementStyle="{StaticResource StatusCell}" />
+                
+                <DataGridComboBoxColumn Header="Security" DisplayMemberPath="Isin" ItemsSource="{Binding Source={StaticResource Securities}}" SelectedItemBinding="{Binding Security, UpdateSourceTrigger=PropertyChanged}"/>
+                <DataGridComboBoxColumn Header="Buy/Sell" ItemsSource="{Binding Source={StaticResource BuyOrSellEnum}}" SelectedItemBinding="{Binding BuySell, UpdateSourceTrigger=PropertyChanged}"/>
+                <DataGridTextColumn Header="Price" Binding="{Binding Price, StringFormat=\{0:N3\}, UpdateSourceTrigger=PropertyChanged}" ElementStyle="{StaticResource RightCell}" />
+                <DataGridTextColumn Header="Units" Binding="{Binding Units, StringFormat=\{0:N0\}, UpdateSourceTrigger=PropertyChanged}" ElementStyle="{StaticResource RightCell}" />
+                
+                <DataGridTextColumn Header="CCY" Binding="{Binding Trade.Security.Currency}" IsReadOnly="True"  />
+                <DataGridComboBoxColumn Header="Counterparty" DisplayMemberPath="Name" ItemsSource="{Binding Source={StaticResource Counterparties}}" SelectedItemBinding="{Binding Trade.Counterparty, UpdateSourceTrigger=PropertyChanged}"/>
+                <DataGridTextColumn Header="Traded By" Binding="{Binding Trade.CreatedBy}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Traded At" Binding="{Binding Trade.Created}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Updated By" Binding="{Binding Trade.LastUpdatedBy}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Updated At" Binding="{Binding Trade.LastUpdated}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Version" Binding="{Binding Trade.Version}" IsReadOnly="True" />
+            </DataGrid.Columns>
+            <DataGrid.RowDetailsTemplate>
+                <DataTemplate>
+                    <DataGrid IsReadOnly="True" ItemsSource="{Binding History}" AutoGenerateColumns="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Trade Ref" Binding="{Binding Id}"/>
+                            <DataGridTextColumn Header="Status" Binding="{Binding State}" ElementStyle="{StaticResource StatusCell}" />
+                            <DataGridTextColumn Header="ISIN" Binding="{Binding Security.Isin}" />
+                            <DataGridTextColumn Header="Buy/Sell" Binding="{Binding BuySell}" />
+                            <DataGridTextColumn Header="Price" Binding="{Binding Price, StringFormat=\{0:N3\}}" ElementStyle="{StaticResource RightCell}" />
+                            <DataGridTextColumn Header="Units" Binding="{Binding Units, StringFormat=\{0:N0\}}" ElementStyle="{StaticResource RightCell}" />
+                            <DataGridTextColumn Header="CCY" Binding="{Binding Security.Currency}" />
+                            <DataGridTextColumn Header="Counterparty" Binding="{Binding Counterparty.Name}" />
+                            <DataGridTextColumn Header="Traded By" Binding="{Binding CreatedBy}" />
+                            <DataGridTextColumn Header="Traded At" Binding="{Binding Created}" />
+                            <DataGridTextColumn Header="Updated By" Binding="{Binding LastUpdatedBy}" />
+                            <DataGridTextColumn Header="Updated At" Binding="{Binding LastUpdated}" />
+                            <DataGridTextColumn Header="Version" Binding="{Binding Version}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DataTemplate>
+            </DataGrid.RowDetailsTemplate>
+        </DataGrid>
+	</Grid>
+</Window>

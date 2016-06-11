@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:tns="http://schemas.datacontract.org/2004/07/Blotter.Model" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/Blotter.Model" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+  <xs:complexType name="ArrayOfCounterparty">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Counterparty" nillable="true" type="tns:Counterparty" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfCounterparty" nillable="true" type="tns:ArrayOfCounterparty" />
+  <xs:complexType name="Counterparty">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Id" type="ser:guid" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Counterparty" nillable="true" type="tns:Counterparty" />
+  <xs:complexType name="ArrayOfSecurity">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Security" nillable="true" type="tns:Security" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfSecurity" nillable="true" type="tns:ArrayOfSecurity" />
+  <xs:complexType name="Security">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Coupon" type="xs:decimal" />
+      <xs:element minOccurs="0" name="Currency" type="tns:Currency" />
+      <xs:element minOccurs="0" name="Isin" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="IssueDate" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="MaturityDate" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="UnitSize" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Security" nillable="true" type="tns:Security" />
+  <xs:simpleType name="Currency">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="GBP" />
+      <xs:enumeration value="USD" />
+      <xs:enumeration value="EUR" />
+      <xs:enumeration value="JPY" />
+      <xs:enumeration value="SEK" />
+      <xs:enumeration value="NOK" />
+      <xs:enumeration value="GEL" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="Currency" nillable="true" type="tns:Currency" />
+</xs:schema>

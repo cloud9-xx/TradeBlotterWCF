@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="80d17f25-edbd-4a30-a0f3-b6ef07c24a60" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="net.tcp://localhost:8733/TradeService/mex" Protocol="mex" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="309e5ec3-3984-4a2b-b202-804d12b03e4d" SourceId="1" SourceUrl="net.tcp://localhost:8733/TradeService/mex" />
+    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="7b8f3c5e-7883-4f1b-a119-10ea2e742397" SourceId="1" SourceUrl="net.tcp://localhost:8733/TradeService/mex" />
+    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="6628353b-aba0-4dac-890f-9ab2332a462c" SourceId="1" SourceUrl="net.tcp://localhost:8733/TradeService/mex" />
+    <MetadataFile FileName="Blotter.Model.xsd" MetadataType="Schema" ID="36d40a5a-dd2b-42f6-9fc4-1cff3f948b54" SourceId="1" SourceUrl="net.tcp://localhost:8733/TradeService/mex" />
+    <MetadataFile FileName="Blotter.Service.xsd" MetadataType="Schema" ID="cb34a338-9633-41ee-8e47-505daa275fc5" SourceId="1" SourceUrl="net.tcp://localhost:8733/TradeService/mex" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

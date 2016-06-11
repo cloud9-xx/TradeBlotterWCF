@@ -1,0 +1,189 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://tempuri.org/" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="TradeService" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsp:Policy wsu:Id="TCP_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <wsrm:RMAssertion xmlns:wsrm="http://schemas.xmlsoap.org/ws/2005/02/rm/policy">
+          <wsrm:InactivityTimeout Milliseconds="600000">
+          </wsrm:InactivityTimeout>
+          <wsrm:AcknowledgementInterval Milliseconds="200">
+          </wsrm:AcknowledgementInterval>
+        </wsrm:RMAssertion>
+        <msb:BinaryEncoding xmlns:msb="http://schemas.microsoft.com/ws/06/2004/mspolicy/netbinary1">
+        </msb:BinaryEncoding>
+        <sp:TransportBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <wsp:Policy>
+            <sp:TransportToken>
+              <wsp:Policy>
+                <msf:WindowsTransportSecurity xmlns:msf="http://schemas.microsoft.com/ws/2006/05/framing/policy">
+                  <msf:ProtectionLevel>EncryptAndSign</msf:ProtectionLevel>
+                </msf:WindowsTransportSecurity>
+              </wsp:Policy>
+            </sp:TransportToken>
+            <sp:AlgorithmSuite>
+              <wsp:Policy>
+                <sp:Basic256>
+                </sp:Basic256>
+              </wsp:Policy>
+            </sp:AlgorithmSuite>
+            <sp:Layout>
+              <wsp:Policy>
+                <sp:Strict>
+                </sp:Strict>
+              </wsp:Policy>
+            </sp:Layout>
+          </wsp:Policy>
+        </sp:TransportBinding>
+        <wsaw:UsingAddressing>
+        </wsaw:UsingAddressing>
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://tempuri.org/Imports">
+      <xsd:import namespace="http://tempuri.org/" />
+      <xsd:import namespace="http://schemas.datacontract.org/2004/07/Blotter.Service" />
+      <xsd:import namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import namespace="http://schemas.datacontract.org/2004/07/Blotter.Model" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="ITradeService_AddUpdateTrade_InputMessage">
+    <wsdl:part name="parameters" element="tns:AddUpdateTrade" />
+  </wsdl:message>
+  <wsdl:message name="ITradeService_AddUpdateTrade_OutputMessage">
+    <wsdl:part name="parameters" element="tns:AddUpdateTradeResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITradeService_AddUpdateTrade_AttemptingToUpdateOldVersionOfTradeFault_FaultMessage">
+    <wsdl:part xmlns:q1="http://schemas.datacontract.org/2004/07/Blotter.Service" name="detail" element="q1:AttemptingToUpdateOldVersionOfTrade" />
+  </wsdl:message>
+  <wsdl:message name="ITradeService_GetHistoryForTrade_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetHistoryForTrade" />
+  </wsdl:message>
+  <wsdl:message name="ITradeService_GetHistoryForTrade_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetHistoryForTradeResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITradeService_GetHistoryForTrade_TradeDoesNotExistFault_FaultMessage">
+    <wsdl:part xmlns:q2="http://schemas.datacontract.org/2004/07/Blotter.Service" name="detail" element="q2:TradeDoesNotExist" />
+  </wsdl:message>
+  <wsdl:message name="ITradeService_GetTrades_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetTrades" />
+  </wsdl:message>
+  <wsdl:message name="ITradeService_GetTrades_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetTradesResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITradeService_Subscribe_InputMessage">
+    <wsdl:part name="parameters" element="tns:Subscribe" />
+  </wsdl:message>
+  <wsdl:message name="ITradeService_Subscribe_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SubscribeResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITradeService_Unsubscribe_InputMessage">
+    <wsdl:part name="parameters" element="tns:Unsubscribe" />
+  </wsdl:message>
+  <wsdl:message name="ITradeService_Unsubscribe_OutputMessage">
+    <wsdl:part name="parameters" element="tns:UnsubscribeResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITradeService_TradeUpdated_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:TradeUpdated" />
+  </wsdl:message>
+  <wsdl:portType msc:usingSession="true" name="ITradeService">
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="AddUpdateTrade">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITradeService/AddUpdateTrade" message="tns:ITradeService_AddUpdateTrade_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITradeService/AddUpdateTradeResponse" message="tns:ITradeService_AddUpdateTrade_OutputMessage" />
+      <wsdl:fault wsaw:Action="http://tempuri.org/ITradeService/AddUpdateTradeAttemptingToUpdateOldVersionOfTradeFault" name="AttemptingToUpdateOldVersionOfTradeFault" message="tns:ITradeService_AddUpdateTrade_AttemptingToUpdateOldVersionOfTradeFault_FaultMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="GetHistoryForTrade">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITradeService/GetHistoryForTrade" message="tns:ITradeService_GetHistoryForTrade_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITradeService/GetHistoryForTradeResponse" message="tns:ITradeService_GetHistoryForTrade_OutputMessage" />
+      <wsdl:fault wsaw:Action="http://tempuri.org/ITradeService/GetHistoryForTradeTradeDoesNotExistFault" name="TradeDoesNotExistFault" message="tns:ITradeService_GetHistoryForTrade_TradeDoesNotExistFault_FaultMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="GetTrades">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITradeService/GetTrades" message="tns:ITradeService_GetTrades_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITradeService/GetTradesResponse" message="tns:ITradeService_GetTrades_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="Subscribe">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITradeService/Subscribe" message="tns:ITradeService_Subscribe_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITradeService/SubscribeResponse" message="tns:ITradeService_Subscribe_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="true" name="Unsubscribe">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITradeService/Unsubscribe" message="tns:ITradeService_Unsubscribe_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITradeService/UnsubscribeResponse" message="tns:ITradeService_Unsubscribe_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="TradeUpdated">
+      <wsdl:output wsaw:Action="http://tempuri.org/ITradeService/TradeUpdated" message="tns:ITradeService_TradeUpdated_OutputCallbackMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="TCP" type="tns:ITradeService">
+    <wsp:PolicyReference URI="#TCP_policy">
+    </wsp:PolicyReference>
+    <soap12:binding transport="http://schemas.microsoft.com/soap/tcp" />
+    <wsdl:operation name="AddUpdateTrade">
+      <soap12:operation soapAction="http://tempuri.org/ITradeService/AddUpdateTrade" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="AttemptingToUpdateOldVersionOfTradeFault">
+        <soap12:fault use="literal" name="AttemptingToUpdateOldVersionOfTradeFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="GetHistoryForTrade">
+      <soap12:operation soapAction="http://tempuri.org/ITradeService/GetHistoryForTrade" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="TradeDoesNotExistFault">
+        <soap12:fault use="literal" name="TradeDoesNotExistFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="GetTrades">
+      <soap12:operation soapAction="http://tempuri.org/ITradeService/GetTrades" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Subscribe">
+      <soap12:operation soapAction="http://tempuri.org/ITradeService/Subscribe" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Unsubscribe">
+      <soap12:operation soapAction="http://tempuri.org/ITradeService/Unsubscribe" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="TradeUpdated">
+      <soap12:operation soapAction="http://tempuri.org/ITradeService/TradeUpdated" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="TradeService">
+    <wsdl:port name="TCP" binding="tns:TCP">
+      <soap12:address location="net.tcp://localhost:8733/TradeService/" />
+      <wsa10:EndpointReference>
+        <wsa10:Address>net.tcp://localhost:8733/TradeService/</wsa10:Address>
+        <Identity xmlns="http://schemas.xmlsoap.org/ws/2006/02/addressingidentity">
+          <Dns>localhost</Dns>
+        </Identity>
+      </wsa10:EndpointReference>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
